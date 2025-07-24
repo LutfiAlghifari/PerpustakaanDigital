@@ -2,11 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BukuController;
-use App\Http\Controllers\BukuPenulisController;
-use App\Http\Controllers\PenulisController;
-use App\Http\Controllers\PenggunaController;
-use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookAuthorsController;
+use App\Http\Controllers\BooksController;
+use App\Http\Controllers\AuthorsController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\LoansController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,32 +20,19 @@ use App\Http\Controllers\PeminjamanController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::apiResource('user', UsersController::class);
+    Route::apiResource('author', AuthorsController::class);
+    Route::apiResource('book', BooksController::class);
+    Route::apiResource('book_author', BookAuthorsController::class);
+    Route::apiResource('loan', LoansController::class);
+
+    // Route::get('user-count', [UsersController::class, 'usercount']);     
+    // Route::get('book-count', [BooksController::class, 'bookcount']);     
+    // Route::get('loan-count', [LoansController::class, 'loancount']);     
 });
-
-
-Route::apiResource('buku', BukuController::class);
-Route::apiResource('buku-penulis', BukuPenulisController::class);
-
-
-
-Route::get('/penulis', [PenulisController::class, 'index']);
-Route::get('/penulis/{id}', [PenulisController::class, 'show']);
-Route::post('/penulis', [PenulisController::class, 'store']);
-Route::put('/penulis/{id}', [PenulisController::class, 'update']);
-Route::delete('/penulis/{id}', [PenulisController::class, 'destroy']);
-
-
-Route::get('/pengguna', [PenggunaController::class, 'index']);
-Route::get('/pengguna/{id}', [PenggunaController::class, 'show']);
-Route::post('/pengguna', [PenggunaController::class, 'store']);
-Route::put('/pengguna/{id}', [PenggunaController::class, 'update']);
-Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy']);
-
-
-Route::get('/peminjaman', [PeminjamanController::class, 'index']);
-Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
-Route::post('/peminjaman', [PeminjamanController::class, 'store']);
-Route::put('/peminjaman/{id}', [PeminjamanController::class, 'update']);
-Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy']);
